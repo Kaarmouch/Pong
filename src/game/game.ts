@@ -12,13 +12,15 @@ export class Game {
   ball: Ball;
   player1: Player;
   player2: Player | CPU;
+  mode : number;
   scoreA : number = 0;
   scoreB : number = 0;
   running : boolean = true;
   private tracker = new Tracker();
   //pass cpu mode on app.ts
-  constructor(canvas: HTMLCanvasElement, cpuMode = false) {
+  constructor(canvas: HTMLCanvasElement, mode: number) {
     this.canvas = canvas;
+    this.mode = mode;
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error("Contexte 2D non trouvé.");
     this.ctx = ctx;
@@ -40,7 +42,7 @@ export class Game {
 
     this.player1 = new Player(paddle1, { up: 'z', down: 's' });
 
-    this.player2 = cpuMode
+    this.player2 = mode
       ? new CPU(paddle2)
       : new Player(paddle2, { up: 'ArrowUp', down: 'ArrowDown' });
 
@@ -122,7 +124,7 @@ export class Game {
       requestAnimationFrame(this.loop);
     else
       this.endGame();
-};
+  }
   endScreen(stats :{ winner: string | null;
   totalExchanges: number;
   maxRally: number;})
@@ -147,12 +149,15 @@ export class Game {
   y += 30;
   ctx.fillText(`Rallye max : ${stats.maxRally}`, centerX, y);
   
-}
+  }
 
   endGame()
   {
     const stats = this.tracker.getStats();
     this.endScreen(stats);
+    const menu = document.getElementById("menu");
+    if (menu)
+      menu.style.display = "block"; // reafficher menu de fin 
   }
 
   start() {

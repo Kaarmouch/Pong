@@ -6,7 +6,7 @@ const startJCJBtn = document.getElementById('JCJ')!;
 const startCPUBtn = document.getElementById('CPU')!;
 
 
-function launchGame(mode: boolean)
+function launchGame(mode: number)
 {
   menu.style.display = 'none';
   canvas.style.display = 'block';
@@ -15,9 +15,9 @@ function launchGame(mode: boolean)
 };
 
 startJCJBtn.addEventListener('click', () => {
-  launchGame(false);
+  launchGame(0);
 });
 
 startCPUBtn.addEventListener('click', () => {
-  launchGame(true);
+  launchGame(1);
 });
