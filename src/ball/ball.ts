@@ -1,9 +1,10 @@
 import { Paddle } from "../paddle/paddle";
+import { Tracker } from "../tracker/tracker";
 
 export class Ball {
     public vx: number = 0;
     public vy: number = 0;
-    public speed: number = 13;
+    public speed: number = 10;
     
     public live: boolean = true;
 
@@ -38,7 +39,7 @@ export class Ball {
         this.vx = Math.cos(angle)*this.speed;
         this.vy = Math.sin(angle)*this.speed;
     }
-    colision(P1: Paddle, P2: Paddle, canvasHeight: number): void
+    colision(P1: Paddle, P2: Paddle, canvasHeight: number, tracker: Tracker): void
     {
         if (this.y <= 0 || this.y + this.height >= canvasHeight)
             this.vy *= -1;
@@ -49,12 +50,14 @@ export class Ball {
         {
             //this.vx *= -1;
             P1.interaction(this);
+            tracker.recordHit();
         }
         if (this.x +this.width >= P2.x  && 
             this.y <= P2.y + P1.height &&
             this.y + this.height>= P2.y)
         {
             P2.interaction(this);
+            tracker.recordHit();
             //this.vx *= -1;
         }
     }
