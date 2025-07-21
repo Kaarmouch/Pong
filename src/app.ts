@@ -8,7 +8,6 @@ const startCPUBtn = document.getElementById('CPU')!;
 
 function launchGame(mode: boolean)
 {
-  console.log("game started"); // DEBUG
   menu.style.display = 'none';
   canvas.style.display = 'block';
   const game = new Game(canvas, mode);
