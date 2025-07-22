@@ -39,26 +39,40 @@ export class Ball {
         this.vx = Math.cos(angle)*this.speed;
         this.vy = Math.sin(angle)*this.speed;
     }
-    colision(P1: Paddle, P2: Paddle, canvasHeight: number, tracker: Tracker): void
-    {
-        if (this.y <= 0 || this.y + this.height >= canvasHeight)
-            this.vy *= -1;
 
-        if (this.x <= P1.x +P1.width && 
-            this.y <= P1.y +P1.height &&
-            this.y + this.height >= P1.y)
+    colisionMultiple(paddles: Paddle[], canvasHeight: number, tracker: Tracker) {
+         if (this.y + this.vy <= 0 || this.y + this.height + this.vy >= canvasHeight)
         {
-            //this.vx *= -1;
-            P1.interaction(this);
-            tracker.recordHit();
+            this.vy *= -1;
+            console.log("wall");
+            
         }
-        if (this.x +this.width >= P2.x  && 
-            this.y <= P2.y + P1.height &&
-            this.y + this.height>= P2.y)
+        for (const paddle of paddles) {
+            this.colision(paddle, canvasHeight, tracker); 
+        }
+    }
+    colision(paddle: Paddle, canvasHeight: number, tracker: Tracker): void
+    {
+       
+        if (paddle.x < this.x)
         {
-            P2.interaction(this);
-            tracker.recordHit();
-            //this.vx *= -1;
+            if (this.x <= paddle.x +paddle.width && 
+                this.y <= paddle.y +paddle.height &&
+                this.y + this.height >= paddle.y)
+            {
+                paddle.interaction(this);
+                tracker.recordHit();
+            }
+        }
+        else
+        {
+            if (this.x +this.width >= paddle.x  && 
+            this.y <= paddle.y + paddle.height &&
+            this.y + this.height>= paddle.y)
+            {
+                paddle.interaction(this);
+                tracker.recordHit();
+            }
         }
     }
 
