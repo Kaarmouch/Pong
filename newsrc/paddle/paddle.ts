@@ -1,5 +1,5 @@
 import { Ball } from "../ball/ball";
-import { PaddleInfo} from "../types/gameTypes.js";
+
 
 export class Paddle {
   constructor(

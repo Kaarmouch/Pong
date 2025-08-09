@@ -1,6 +1,5 @@
 import { Paddle } from "../paddle/paddle";
 import { Tracker } from "../tracker/tracker";
-import { BallInfo} from "../types/gameTypes.js";
 
 export class Ball {
     public vx: number = 0;
@@ -91,17 +90,7 @@ export class Ball {
         this.x += this.vx;
         this.y += this.vy;
     }
-    serialize(): {
-        info: BallInfo;
-    } {
-        return {info: {
-          x: this.x,
-          y: this.y,
-          width: this.width,
-          height: this.height,
-    }} 
-
-}}
+}
 function randomAngleRad(minRad: number, maxRad: number): number 
 {
   if (minRad < maxRad) {

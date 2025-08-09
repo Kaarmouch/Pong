@@ -3,22 +3,16 @@ import { Paddle } from '../paddle/paddle.js';
 import { Ball } from '../ball/ball.js';
 import { Player } from '../player/player.js';
 import { CPU } from '../player/CPU.js';
+import type { gameConfig } from '../types/gameTypes.js';
 import { Tracker } from '../tracker/tracker.js';
 // import { Strudel } from '@strudel/web';
 
-type playerType = "human" | "cpu" | null;
-type gameMode = "1v1" | "2v2" | "CPU" | "tournament";
-
-interface gameConfig {
-  mode: gameMode;
-  playerSetup?: playerType[];
-}
 
 
 
-export class Game {
+
+export class GameServer {
   canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
   ball: Ball;
   players: (Player | CPU | null)[] = [];
   paddles: (Paddle | null)[] = [];
@@ -30,9 +24,6 @@ export class Game {
   //pass cpu mode on app.ts
   constructor(canvas: HTMLCanvasElement, conf: gameConfig) {
     this.canvas = canvas;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error("Contexte 2D non trouvé.");
-    this.ctx = ctx;
     this.config = conf;  
     this.ball = new Ball(
       canvas.width / 2,
@@ -67,11 +58,11 @@ export class Game {
       { up: 'i', down: 'k' }
     ];
 
-    let playerTypes: playerType[];
+    let Players: GameTypes.PlayerInfo;
 
     switch (this.config.mode) {
       case "1v1":
-        playerTypes = ["human", "human"];
+        Players.type= ["human", "human"];
         break;
       case "CPU":
         playerTypes = ["human","cpu"];
@@ -111,14 +102,8 @@ export class Game {
     }
   }
 
-  drawDashedLine(pattern: number[]) {
-    this.ctx.strokeStyle = 'white';
-    this.ctx.setLineDash(pattern);
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.canvas.width / 2, 0);
-    this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
-    this.ctx.stroke();
-  }
+  /* add too front*/
+
   isEnd() : boolean
   {
     if ((this.scoreA >= 11 ||this.scoreB >= 11) && 
@@ -134,7 +119,6 @@ export class Game {
     }
     return false
   }
-  
 
   update() {
     this.players.forEach((player, i) => {
@@ -161,7 +145,36 @@ export class Game {
     }
   }
 
+  /*draw() {
+    console.log("onDessine");
+    
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.font = '48px Arial';
 
+    this.drawDashedLine([10, 10]);
+    this.ctx.fillText(this.scoreA.toString(), this.canvas.width / 4, 90);
+    this.ctx.fillText(this.scoreB.toString(), (this.canvas.width * 3) / 4, 90);
+
+    this.paddles.forEach(p => {
+      if (p) p.draw(this.ctx);
+    });
+
+    this.ball.draw(this.ctx);
+  }
+*/
+
+serialize(): {
+let p :PaddleInfo = 
+}
+
+ /* loop = () => {
+    this.update();
+  //  this.draw();
+    if (this.running)
+      requestAnimationFrame(this.loop);
+    else
+      this.endGame();
+  }
   endScreen(stats :{ winner: string | null;
   totalExchanges: number;
   maxRally: number;})
@@ -183,18 +196,18 @@ export class Game {
     y += 30;
     ctx.fillText(`Rallye max : ${stats.maxRally}`, centerX, y);
     
-  }
+  }*/
 
   endGame()
   {
     const stats = this.tracker.getStats();
-    this.endScreen(stats);
+    //this.endScreen(stats);
     const menu = document.getElementById("menu");
     if (menu)
       menu.style.display = "block"; // reafficher menu de fin 
   }
 
-  start() {
+ /* start() {
     this.loop();
-  }
+  }*/
 }

@@ -21,6 +21,10 @@ function getCustomPlayers(): PlayerType[] {
   });
 }
 
+/*function resizeCanvasToWindow(canvas: HTMLCanvasElement) {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}*/
 modeSelect.addEventListener('change', () => {
   customConfigDiv.style.display = modeSelect.value === '2v2' ? 'block' : 'none';
 });
@@ -43,3 +47,13 @@ startBtn.addEventListener('click', () => {
   const game = new Game(canvas, config);
   game.start();
 });
+
+
+/*drawDashedLine(pattern: number[]) {
+    this.ctx.strokeStyle = 'white';
+    this.ctx.setLineDash(pattern);
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.canvas.width / 2, 0);
+    this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
+    this.ctx.stroke();
+  }*/

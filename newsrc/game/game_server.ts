@@ -3,22 +3,17 @@ import { Paddle } from '../paddle/paddle.js';
 import { Ball } from '../ball/ball.js';
 import { Player } from '../player/player.js';
 import { CPU } from '../player/CPU.js';
+import type { GameState, PlayerInfo } from '../types/gameTypes.js'
+import type { gameConfig } from '../types/gameTypes.js';
 import { Tracker } from '../tracker/tracker.js';
 // import { Strudel } from '@strudel/web';
 
-type playerType = "human" | "cpu" | null;
-type gameMode = "1v1" | "2v2" | "CPU" | "tournament";
-
-interface gameConfig {
-  mode: gameMode;
-  playerSetup?: playerType[];
-}
 
 
 
-export class Game {
+
+export class GameServer {
   canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
   ball: Ball;
   players: (Player | CPU | null)[] = [];
   paddles: (Paddle | null)[] = [];
@@ -30,9 +25,6 @@ export class Game {
   //pass cpu mode on app.ts
   constructor(canvas: HTMLCanvasElement, conf: gameConfig) {
     this.canvas = canvas;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error("Contexte 2D non trouvé.");
-    this.ctx = ctx;
     this.config = conf;  
     this.ball = new Ball(
       canvas.width / 2,
@@ -67,58 +59,67 @@ export class Game {
       { up: 'i', down: 'k' }
     ];
 
-    let playerTypes: playerType[];
+let players: PlayerInfo[] = [];
 
-    switch (this.config.mode) {
-      case "1v1":
-        playerTypes = ["human", "human"];
-        break;
-      case "CPU":
-        playerTypes = ["human","cpu"];
-        break;
-      case "2v2":
-        playerTypes = this.config.playerSetup ?? ["cpu", "cpu", "cpu", "cpu"];
-        break;
-      /*case "tournament":
-        playerTypes = []; // à implémenter
-        break;*/
-      default:
-        playerTypes = ["human", 'human'];
+switch (this.config.mode) {
+  case "1v1":
+    players = [
+      { type: "human", playerId: 0 },
+      { type: "human", playerId: 1 }
+    ];
+    break;
+
+  case "CPU":
+    players = [
+      { type: "human", playerId: 0 },
+      { type: "cpu", playerId: 1 }
+    ];
+    break;
+
+  case "2v2":
+    players = this.config.playerSetup.length
+      ? this.config.playerSetup
+      : [
+          { type: "cpu", playerId: 0 },
+          { type: "cpu", playerId: 1 },
+          { type: "cpu", playerId: 2 },
+          { type: "cpu", playerId: 3 }
+        ];
+    break;
+
+  default:
+    players = [
+      { type: "human", playerId: 0 },
+      { type: "human", playerId: 1 }
+    ];
+  }
+  for (let i = 0; i < 4; i++) {
+    const playerInfo = players[i] ?? { type: null, playerId: null };
+
+    if (playerInfo.type === null) {
+      this.players.push(null);
+      this.paddles.push(null);
+      continue;
     }
 
-    for (let i = 0; i < 4; i++) {
-      const type = playerTypes[i] ?? null;
+    const paddle = new Paddle(
+      positions[i].x,
+      positions[i].y,
+      paddleWidth,
+      paddleHeight,
+      'white',
+      15
+    );
 
-      if (type === null) {
-        this.players.push(null);
-        this.paddles.push(null);
-        continue;
-      }
-
-      const paddle = new Paddle(
-        positions[i].x,
-        positions[i].y,
-        paddleWidth,
-        paddleHeight,
-        'white',
-        15
-      );
-
-      this.paddles.push(paddle);
-      this.players.push(
-        type === "human" ? new Player(paddle, controls[i]) : new CPU(paddle)
-      );
-    }
+    this.paddles.push(paddle);
+    this.players.push(
+      playerInfo.type === "human"
+      ? new Player(paddle, controls[i])
+      : new CPU(paddle)
+    );
   }
+}
 
-  drawDashedLine(pattern: number[]) {
-    this.ctx.strokeStyle = 'white';
-    this.ctx.setLineDash(pattern);
-    this.ctx.beginPath();
-    this.ctx.moveTo(this.canvas.width / 2, 0);
-    this.ctx.lineTo(this.canvas.width / 2, this.canvas.height);
-    this.ctx.stroke();
-  }
   isEnd() : boolean
   {
     if ((this.scoreA >= 11 ||this.scoreB >= 11) && 
@@ -134,7 +135,6 @@ export class Game {
     }
     return false
   }
-  
 
   update() {
     this.players.forEach((player, i) => {
@@ -161,40 +161,37 @@ export class Game {
     }
   }
 
-
-  endScreen(stats :{ winner: string | null;
-  totalExchanges: number;
-  maxRally: number;})
-    : void {
-    const ctx = this.ctx;
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    ctx.fillStyle = 'white';
-    ctx.font = '28px Arial';
-    ctx.textAlign = 'center';
-
-    const centerX = this.canvas.width / 2;
-    let y = this.canvas.height / 2 - 60;
-
-    ctx.fillText(`🏆 Gagnant : ${stats.winner}`, centerX, y);
-    y += 40;
-    ctx.fillText(`Total échanges : ${stats.totalExchanges}`, centerX, y);
-    y += 30;
-    ctx.fillText(`Rallye max : ${stats.maxRally}`, centerX, y);
-    
-  }
+  getGameState(): GameState {
+  return {
+    ball: {
+      x: this.ball.x,
+      y: this.ball.y,
+      width: this.ball.width,
+      height: this.ball.height,
+      color: this.ball.color
+    },
+    paddles: this.paddles.map(p => p ? {
+      x: p.x,
+      y: p.y,
+      width: p.width,
+      height: p.height,
+      color: p.color
+    } : null),
+    scores: {
+      A: this.scoreA,
+      B: this.scoreB
+    },
+    running: this.running
+  };
+}
 
   endGame()
   {
     const stats = this.tracker.getStats();
-    this.endScreen(stats);
+    //this.endScreen(stats);
     const menu = document.getElementById("menu");
     if (menu)
       menu.style.display = "block"; // reafficher menu de fin 
   }
 
-  start() {
-    this.loop();
-  }
 }
