@@ -1,30 +1,19 @@
-import { Paddle } from '../paddle/paddle';
-import { Ball } from '../ball/ball';
+import { Paddle } from '../paddle/paddle.js';
+import { Ball } from '../ball/ball.js';
 import { PlayerInfo} from "../types/gameTypes.js";
 
 export class Player {
   public id : number;
   public paddle: Paddle;
-  private keys: { up: string, down: string };
-  private input: Record<string, boolean>;
+  public keys: { up: string, down: string };
+  public input: Record<string, boolean>;
 
-  constructor(paddle: Paddle, keys: { up: string, down: string }, id :number) {
+  constructor(paddle: Paddle, keys: { up: string, down: string }, id :number = 0) {
     this.paddle = paddle;
     this.keys = keys;
     this.input = { [keys.up]: false, [keys.down]: false };
     this.id = id;
   }
- 
-  serialize(): PlayerInfo {
-      return {
-        x: this.paddle.x,
-        y: this.paddle.y,
-        width: this.paddle.width,
-        height: this.paddle.height,
-        type: "human",
-        playerId: this.id,
-      };
-    }
 
   public update(ball: Ball, canvasHeight: number) {
     if (this.input[this.keys.up] && this.paddle.y > 0) {

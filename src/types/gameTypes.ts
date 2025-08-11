@@ -1,14 +1,12 @@
-
+type gameMode = "1v1" | "2v2" | "CPU" | "tournament";
 
 export interface PlayerInfo {
   type : "human" | "cpu" | null;
   playerId: number | null;
 }
 
-type gameMode = "1v1" | "2v2" | "CPU" | "tournament";
-
 export interface gameConfig {
-  gameId: number;
+  //gameId: number;
   mode: gameMode;
   playerSetup: PlayerInfo[];
 }
@@ -32,6 +30,12 @@ export interface GameState {
     B: number;
   };
   running: boolean;
+  traker: {
+    winner: string | null;
+    totalExchanges : number;
+    maxRally : number;
+    
+  }
 }
 
 // ===  Input utilisateur ===

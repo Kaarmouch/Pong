@@ -27,7 +27,18 @@ export class CPU {
     }
     return -1;
   }
- 
+
+  serialize(): PlayerInfo {
+    return {
+      x: this.paddle.x,
+      y: this.paddle.y,
+      width: this.paddle.width,
+      height: this.paddle.height,
+      type: "cpu",
+      playerId: -1,
+    };
+  }
+  
   public update(ball: Ball, canvasHeight: number) {
     const YBallImpact = this.predictBall(ball, canvasHeight);
     if (YBallImpact != -1)

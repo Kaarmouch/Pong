@@ -8,7 +8,7 @@ export interface PlayerInfo {
 type gameMode = "1v1" | "2v2" | "CPU" | "tournament";
 
 export interface gameConfig {
-  //gameId: number;
+  gameId: number;
   mode: gameMode;
   playerSetup: PlayerInfo[];
 }

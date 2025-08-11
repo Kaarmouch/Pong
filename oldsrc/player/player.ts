@@ -8,12 +8,23 @@ export class Player {
   private keys: { up: string, down: string };
   private input: Record<string, boolean>;
 
-  constructor(paddle: Paddle, keys: { up: string, down: string }, id :number = 0) {
+  constructor(paddle: Paddle, keys: { up: string, down: string }, id :number) {
     this.paddle = paddle;
     this.keys = keys;
     this.input = { [keys.up]: false, [keys.down]: false };
     this.id = id;
   }
+ 
+  serialize(): PlayerInfo {
+      return {
+        x: this.paddle.x,
+        y: this.paddle.y,
+        width: this.paddle.width,
+        height: this.paddle.height,
+        type: "human",
+        playerId: this.id,
+      };
+    }
 
   public update(ball: Ball, canvasHeight: number) {
     if (this.input[this.keys.up] && this.paddle.y > 0) {

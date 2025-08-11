@@ -10,48 +10,60 @@
   </style>
 	</head>
 	<body>
-		<!-- commentaire -->
-		<div id="menu" style="text-align: center; color: white;">
-			<h1>PONG</h1>
-			<label for="modeSelect">Mode de jeu :</label>
-    		<select id="modeSelect">
-     			<option value="2v2" selected>2 vs 2</option>
-      			<option value="1v1">1 vs 1</option>
-      			<option value="CPU">CPU</option>
-      			<!--<option value="tournament">Tournoi</option> -->
+	<div id="menu-game-config" style="display: flex;" class="menu-game-config">
+		<h1>PONG</h1>
+
+		<label for="modeSelect"> Mode de jeu :</label>
+  		<select id="modeSelect" class="select-style">
+    		<option value="2v2" selected>2 vs 2</option>
+    		<option value="1v1">1 vs 1</option>
+  		</select>
+
+  		<div id="custom-config_2vs2" class="config-section">
+    		<p>Configurer les paddles <strong>2 vs 2</strong> :</p>
+    		<label>Paddle 1 :</label>
+    		<select id="player1" class="select-style">
+     			<option value="human" selected>Humain</option>
+      			<option value="cpu">Bot</option>
+    		</select><br />
+    		<label>Paddle 2 :</label>
+    		<select id="player2" class="select-style">
+     			<option value="human">Humain</option>
+      			<option value="cpu" selected>Bot</option>
+    		</select><br />
+    		<label>Paddle 3 :</label>
+    		<select id="player3" class="select-style">
+     			<option value="human">Humain</option>
+      			<option value="cpu" selected>Bot</option>
+    		</select><br />
+    		<label>Paddle 4 :</label>
+    		<select id="player4" class="select-style">
+      			<option value="human">Humain</option>
+      			<option value="cpu" selected>Bot</option>
     		</select>
-		<div id="custom-config" display="none">
-			<p>Configurer les paddles 2v2 (humain, bot, ou inactif) :</p>
-      		<label>Paddle 1 :</label>
-			<select id="player1">
-				<option value="human" selected>Humain</option>
-				<option value="cpu">Bot</option>
-			</select>
-			<br />
-			<label>Paddle 2 :</label>
-			<select id="player2">
-				<option value="human">Humain</option>
-				<option value="cpu" selected>Bot</option>
-			</select>
-			<br />
-			<label>Paddle 3 :</label>
-			<select id="player3">
-				<option value="human">Humain</option>
-				<option value="cpu" selected>Bot</option>
-			</select>
-			<br />
-			<label>Paddle 4 :</label>
-			<select id="player4">
-				<option value="human">Humain</option>
-				<option value="cpu"select>Bot</option>
-			</select>
-    	</div>
-		<div>
-    		<option id="startBtn">Lancer la partie</option>
   		</div>
-		</div>
-		<canvas id="canvas" width = "900" height = "720" style="border:1px solid white;"></canvas>
-		<script type="module" src = "./dist/app.js"></script>
+
+
+  		<div id="custom-config_1vs1" class="config-section" style="display: none;">
+    		<p>Configurer les paddles <strong>1 vs 1</strong> :</p>
+    		<label>Paddle 1 :</label>
+    		<select id="player1_1v1" class="select-style">
+      			<option value="human" selected>Humain</option>
+      			<option value="cpu">Bot</option>
+    		</select><br />
+    		<label>Paddle 2 :</label>
+    		<select id="player2_1v1" class="select-style">
+     			<option value="human">Humain</option>
+    			<option value="cpu" selected>Bot</option>
+    		</select>
+  		</div>
+
+  		<div style="margin-top: 20px;">
+    	<button id="startBtn" class="btn-style">Lancer la partie</button>
+  		</div>
+	</div>
+	<canvas id="canvas" width = "900" height = "720" style="border:1px solid white;"></canvas>
+	<script type="module" src = "./dist/app.js"></script>
 	</body>
 </html>
 
