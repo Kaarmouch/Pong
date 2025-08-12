@@ -41,13 +41,14 @@ export class GameLogic {
     const paddleHeight = this.canvas.height / 12;
     const margin = 5;
     const spacing = 30;
-    const y = (this.canvas.height - paddleHeight) / 2;
+    const mid = (this.canvas.height) / 2;
 
+    //team : P1 et P3 // P2 et P4
     const positions = [
-      { x: margin, y },
-      { x: this.canvas.width - margin - paddleWidth, y },
-      { x: margin * 2 + paddleWidth, y: y + spacing },
-      { x: this.canvas.width - (margin * 4  + paddleWidth), y: y + spacing }
+      { x: margin, y : (mid - mid/2) + paddleHeight/2} , // P1
+      { x: this.canvas.width - margin - paddleWidth, y : (mid + mid/2)+ paddleHeight/2}, //P2
+      { x: margin * 2 + paddleWidth, y: (mid + mid/2)+ paddleHeight/2}, //P3
+      { x: this.canvas.width - (margin * 4  + paddleWidth), y: (mid - mid/2)+ paddleHeight/2} //P4
     ];
 
     const controls = [
@@ -78,7 +79,7 @@ export class GameLogic {
       this.players.push(
         this.config.playerSetup[i].type === "human"
         ? new Player(paddle, controls[i])
-        : new CPU(paddle)
+        : new CPU(paddle,this.config.mode, i, this.canvas.height)
       );
   }
 }

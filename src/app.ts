@@ -50,7 +50,7 @@ class GameRenderer {
     });
     this.ctx.fillStyle = 'white';
     this.ctx.font = '20px Arial';
-    this.ctx.fillText(`${state.scores.A} - ${state.scores.B}`, this.canvas.width / 2 - 20, 30);
+    this.ctx.fillText(`${state.scores.A}    ${state.scores.B}`, this.canvas.width / 2 - 20, 30);
   }
 }
 

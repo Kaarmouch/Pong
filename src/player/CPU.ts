@@ -4,10 +4,30 @@ import { PlayerInfo} from "../types/gameTypes.js";
 
 export class CPU {
   public paddle: Paddle;
-  private lastUpdateTime: number = 0;
+  public gameMode: string;
+  private limitTop: number;
+  private limitBot: number;
 
-  constructor(paddle: Paddle) {
+  constructor(paddle: Paddle, mode: string, indexPaddle: number, canvasHeight: number) {
     this.paddle = paddle;
+    this.gameMode = mode;
+    if (mode == '2v2')
+    {
+      console.log("2v2 detected");
+      
+      if (indexPaddle == 0 || indexPaddle == 3){
+        this.limitTop = 0;
+        this.limitBot = (canvasHeight/2)-paddle.height;
+      } 
+      else 
+      {
+        this.limitTop = canvasHeight/2
+        this.limitBot = canvasHeight - paddle.height;
+      }
+    } else {
+      this.limitTop = 0
+      this.limitBot = canvasHeight - paddle.height;
+    }
   }
 
   public predictBall(ball: Ball, canvasHeight: number) : number
@@ -35,18 +55,17 @@ export class CPU {
       const paddleCenter = this.paddle.y + this.paddle.height / 2;
       const ballCenter = YBallImpact + ball.height / 2;
       const speed = 7;
-
       if (ballCenter < this.paddle.y) {
         this.paddle.y -= speed;
       } else if (ballCenter > paddleCenter + 10) {
         this.paddle.y += speed;
       }
+    }
       // Clamp
-      this.paddle.y = Math.max(0, Math.min(canvasHeight - this.paddle.height, this.paddle.y));
+      this.paddle.y = Math.max(this.limitTop, Math.min(this.limitBot, this.paddle.y));
     }
 }
 
-}
 /*function simulatedKey(key: string, type: 'keydown' | 'keyup') {
   const event = new KeyboardEvent(type, {
     key: key,
