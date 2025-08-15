@@ -31,14 +31,17 @@ export class GameLogic {
       'right'
     );
     this.initPlayers();
-    this.ball.spawn();
+    setTimeout(() => {
+        this.ball.spawn();
+        }, 2000);
+    this.ball.stop()
   }
 
   
 
     private initPlayers() {
     const paddleWidth = this.canvas.width / 80;
-    const paddleHeight = this.canvas.height / 12;
+    const paddleHeight = this.canvas.height / 20;
     const margin = 5;
     const spacing = 30;
     const mid = (this.canvas.height) / 2;
@@ -134,7 +137,7 @@ export class GameLogic {
         this.ball.y = this.canvas.height - this.canvas.height / 4;
       else
         this.ball.y = this.canvas.height / 4;
-      this.ball.spawn();
+        this.ball.spawn();
     }
   }
 

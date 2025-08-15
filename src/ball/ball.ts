@@ -30,14 +30,28 @@ export class Ball {
             this.live = true;
         }
         else
-                angle = Math.random() * Math.PI * 2;
+        {
+            if (Math.random() < 0.5) {
+            angle = randomAngleRad(11 * Math.PI / 6, Math.PI / 6);
+            } else {
+            angle = randomAngleRad(5 * Math.PI / 6, 7 * Math.PI / 6);
+            }
+        }
         this.launch(angle);
+    }
+    
+    stop() {
+    this.vx = 0;
+    this.vy = 0;
     }
 
     launch(angle: number)
     {
+        setTimeout(() => {
         this.vx = Math.cos(angle)*this.speed;
         this.vy = Math.sin(angle)*this.speed;
+        }, 2000);
+        this.stop()
     }
 
     colisionMultiple(paddles: Paddle[], canvasHeight: number, tracker: Tracker) {

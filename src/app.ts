@@ -132,7 +132,7 @@ class GameApp {
     const loop = () => {
       game.update();
       let state = game.getGameState();
-      renderer.draw(game.getGameState());
+      renderer.draw(state);
       if (state.running)
         requestAnimationFrame(loop);
       else 
