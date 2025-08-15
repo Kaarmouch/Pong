@@ -5,11 +5,14 @@ type gameMode = "1v1" | "2v2" | "CPU" | "tournament";
 
 class GameRenderer {
   private ctx: CanvasRenderingContext2D;
+  private startTime: number;
+ 
 
   constructor(private canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error("Impossible d'obtenir le contexte 2D");
     this.ctx = ctx;
+    this.startTime = performance.now();
   }
   drawDashedLine(pattern: number[]) {
     this.ctx.strokeStyle = 'white';
@@ -48,9 +51,34 @@ class GameRenderer {
       this.ctx.fillStyle = p.color;
       this.ctx.fillRect(p.x, p.y, p.width, p.height);
     });
-    this.ctx.fillStyle = 'white';
-    this.ctx.font = '20px Arial';
-    this.ctx.fillText(`${state.scores.A}    ${state.scores.B}`, this.canvas.width / 2 - 20, 30);
+    const elapsed = (performance.now() - this.startTime) / 1000;
+    this.ctx.font = "20px Arial";
+    this.ctx.fillStyle = "white";
+    if (elapsed < 3) {
+      
+      let x : number;
+      state.paddles.forEach((paddle, index) => {
+        if (!paddle) return;
+        if (index % 2 == 0)
+        {
+          this.ctx.textAlign = "left";
+          x = paddle.x;
+        }
+        else
+        {
+          this.ctx.textAlign = "right";
+          x = paddle.x + paddle.width;
+        }
+        this.ctx.fillText(
+          paddle.name,
+          x,
+          paddle.y - 15 
+        );
+      });
+    }
+    this.ctx.font = "30px Arial";
+    this.ctx.textAlign = "center";
+    this.ctx.fillText(`${state.scores.A}    ${state.scores.B}`, this.canvas.width / 2 , 40);
   }
 }
 

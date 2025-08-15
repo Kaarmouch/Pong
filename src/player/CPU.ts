@@ -3,6 +3,7 @@ import { Ball } from '../ball/ball.js';
 import { PlayerInfo} from "../types/gameTypes.js";
 
 export class CPU {
+  public name: string = "CPU";
   public paddle: Paddle;
   public gameMode: string;
   private limitTop: number;
@@ -13,8 +14,6 @@ export class CPU {
     this.gameMode = mode;
     if (mode == '2v2')
     {
-      console.log("2v2 detected");
-      
       if (indexPaddle == 0 || indexPaddle == 3){
         this.limitTop = 0;
         this.limitBot = (canvasHeight/2)-paddle.height;
@@ -51,7 +50,6 @@ export class CPU {
  
   public update(ball: Ball, canvasHeight: number) {
     const YBallImpact = this.predictBall(ball, canvasHeight);
-    
     const paddleCenter = this.paddle.y + this.paddle.height / 2;
     if (YBallImpact != -1)
     {

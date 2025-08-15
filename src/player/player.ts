@@ -4,15 +4,17 @@ import { PlayerInfo} from "../types/gameTypes.js";
 
 export class Player {
   public id : number;
+  public name: string;
   public paddle: Paddle;
   public keys: { up: string, down: string };
   public input: Record<string, boolean>;
 
-  constructor(paddle: Paddle, keys: { up: string, down: string }, id :number = 0) {
+  constructor(paddle: Paddle, keys: { up: string, down: string }, id :number = 0, name: string = "Player") {
     this.paddle = paddle;
     this.keys = keys;
     this.input = { [keys.up]: false, [keys.down]: false };
     this.id = id;
+    this.name = name;
   }
 
   public update(ball: Ball, canvasHeight: number) {

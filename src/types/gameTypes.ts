@@ -19,6 +19,7 @@ export interface GameState {
     color: string;
   };
   paddles: ({
+    name: string;
     x: number;
     y: number;
     width: number;

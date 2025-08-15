@@ -10,13 +10,13 @@ import { Tracker } from '../tracker/tracker.js';
 
 
 export class GameLogic {
-  canvas: HTMLCanvasElement;
-  ball: Ball;
-  players: (Player | CPU | null)[] = [];
-  paddles: (Paddle | null)[] = [];
-  scoreA : number = 0;
-  scoreB : number = 0;
-  running : boolean = true;
+  private canvas: HTMLCanvasElement;
+  private ball: Ball;
+  private players: (Player | CPU | null)[] = [];
+  private paddles: (Paddle | null)[] = [];
+  private scoreA : number = 0;
+  private scoreB : number = 0;
+  private running : boolean = true;
   private tracker = new Tracker();
   private config: gameConfig
   constructor(canvas: HTMLCanvasElement, conf: gameConfig) {
@@ -149,13 +149,14 @@ export class GameLogic {
       width: this.ball.width,
       height: this.ball.height,
       color: this.ball.color
-    },
-    paddles: this.paddles.map(p => p ? {
-      x: p.x,
-      y: p.y,
-      width: p.width,
-      height: p.height,
-      color: p.color
+    },  
+    paddles :this.players.map(p => p ? {
+      name: p.name,
+      x: p.paddle.x,
+      y: p.paddle.y,
+      width: p.paddle.width,
+      height: p.paddle.height,
+      color: p.paddle.color
     } : null),
     scores: {
       A: this.scoreA,
