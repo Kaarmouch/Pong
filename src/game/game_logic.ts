@@ -10,7 +10,8 @@ import { Tracker } from '../tracker/tracker.js';
 
 
 export class GameLogic {
-  private canvas: HTMLCanvasElement;
+  private canvasW: number;
+  private canvasH: number;
   private ball: Ball;
   private players: (Player | CPU | null)[] = [];
   private paddles: (Paddle | null)[] = [];
@@ -19,14 +20,15 @@ export class GameLogic {
   private running : boolean = true;
   private tracker = new Tracker();
   private config: gameConfig
-  constructor(canvas: HTMLCanvasElement, conf: gameConfig) {
-    this.canvas = canvas;
-    this.config = conf;  
+  constructor(W: number, H: number, conf: gameConfig) {
+    this.config = conf;
+    this.canvasH = H;
+    this.canvasW = W;  
     this.ball = new Ball(
-      canvas.width / 2,
-      canvas.height / 2,
-      canvas.width / 80,
-      canvas.width / 80,
+      W / 2,
+      H / 2,
+      W/ 80,
+      W / 80,
       'white',
       'right'
     );
@@ -40,18 +42,18 @@ export class GameLogic {
   
 
     private initPlayers() {
-    const paddleWidth = this.canvas.width / 80;
-    const paddleHeight = this.canvas.height / 20;
+    const paddleWidth = this.canvasW / 80;
+    const paddleHeight = this.canvasH / 20;
     const margin = 5;
     const spacing = 30;
-    const mid = (this.canvas.height) / 2;
+    const mid = (this.canvasH) / 2;
 
     //team : P1 et P3 // P2 et P4
     const positions = [
       { x: margin, y : (mid - mid/2) + paddleHeight/2} , // P1
-      { x: this.canvas.width - margin - paddleWidth, y : (mid + mid/2)+ paddleHeight/2}, //P2
+      { x: this.canvasW - margin - paddleWidth, y : (mid + mid/2)+ paddleHeight/2}, //P2
       { x: margin * 2 + paddleWidth, y: (mid + mid/2)+ paddleHeight/2}, //P3
-      { x: this.canvas.width - (margin * 4  + paddleWidth), y: (mid - mid/2)+ paddleHeight/2} //P4
+      { x: this.canvasW - (margin * 4  + paddleWidth), y: (mid - mid/2)+ paddleHeight/2} //P4
     ];
 
     const controls = [
@@ -82,7 +84,7 @@ export class GameLogic {
       this.players.push(
         this.config.playerSetup[i].type == "human"
         ? new Player(paddle, controls[i])
-        : new CPU(paddle, this.config.mode, i, this.canvas.height, controls[i])
+        : new CPU(paddle, this.config.mode, i, this.canvasH, controls[i])
       );
   }
 }
@@ -119,24 +121,24 @@ export class GameLogic {
   update() {
     this.players.forEach((player, i) => {
     if (player && this.paddles[i]) {
-      player.update(this.ball, this.canvas.height);
+      player.update(this.ball, this.canvasH);
     }
     })
     
     const activePaddles = this.paddles.filter(p => p !== null) as Paddle[];
-    this.ball.colisionMultiple(activePaddles, this.canvas.height, this.tracker);
+    this.ball.colisionMultiple(activePaddles, this.canvasH, this.tracker);
     this.ball.update();
-    if (this.ball.goal(this.canvas.width)) {
+    if (this.ball.goal(this.canvasW)) {
       if (this.ball.x <= 0) this.scoreB++;
       else this.scoreA++;
       this.tracker.resetExchange();
       if (this.isEnd() == true)
         return;
-      this.ball.x = this.canvas.width / 2;
+      this.ball.x = this.canvasW / 2;
       if ((this.scoreA + this.scoreB)%2 == 0)
-        this.ball.y = this.canvas.height - this.canvas.height / 4;
+        this.ball.y = this.canvasH - this.canvasH / 4;
       else
-        this.ball.y = this.canvas.height / 4;
+        this.ball.y = this.canvasH / 4;
         this.ball.spawn();
     }
   }

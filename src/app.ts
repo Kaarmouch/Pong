@@ -144,11 +144,12 @@ class GameApp {
     });
   }
 
-  private launchLocalGame(config: gameConfig) {
+  private launchLocalGame(config: gameConfig) 
+  {
     this.menu.style.display = 'none';
     this.canvas.style.display = 'block';
 
-    const game = new GameLogic(this.canvas, config);
+    const game = new GameLogic(this.canvas.width, this.canvas.height, config);
     const renderer = new GameRenderer(this.canvas);
 
     window.addEventListener('keydown', (e) => {

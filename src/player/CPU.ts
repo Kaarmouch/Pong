@@ -41,8 +41,9 @@ export class CPU {
     }
     console.log("CPU index ",indexPaddle, "ltop ",this.limitTop, "lbot ",this.limitBot);
   }
-  private simulateKey(up: boolean, down: boolean) {
 
+  private simulateKey(up: boolean, down: boolean) 
+  {
     this.input[this.kk.up] = up;
     this.input[this.kk.down] = down;
   }
@@ -77,7 +78,7 @@ export class CPU {
   public update(ball: Ball, canvasHeight: number) 
   {
     const currentTime :number = performance.now();
-    let speed :number = 7;
+    let speed :number = 9;
 
     if (currentTime - this.lastDecisionTime >= 1000)
     {
@@ -89,7 +90,7 @@ export class CPU {
     
     if (this.YImpact != -1)
     {
-      const ballCenter = this.YImpact + ball.height / 2; 
+      const ballCenter = this.YImpact; 
       if (ballCenter < this.paddle.y) 
        this.simulateKey(true,false);
       else if (ballCenter > this.paddle.y + this.paddle.height) 
@@ -99,7 +100,6 @@ export class CPU {
     else
     {
       const base = (this.limitBot + this.limitTop)/2;
-      console.log(paddleCenter ," // ", base);
       speed = 1;
       if (paddleCenter < base)
         this.simulateKey(false,true);
@@ -111,12 +111,3 @@ export class CPU {
     this.handleInput(speed)
   }
 }
-
-/*function simulatedKey(key: string, type: 'keydown' | 'keyup') {
-  const event = new KeyboardEvent(type, {
-    key: key,
-    code: key,
-    bubbles: true,
-  });
-  window.dispatchEvent(event);
-}*/
