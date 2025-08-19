@@ -80,9 +80,9 @@ export class GameLogic {
 
       this.paddles.push(paddle);
       this.players.push(
-        this.config.playerSetup[i].type === "human"
+        this.config.playerSetup[i].type == "human"
         ? new Player(paddle, controls[i])
-        : new CPU(paddle,this.config.mode, i, this.canvas.height)
+        : new CPU(paddle, this.config.mode, i, this.canvas.height, controls[i])
       );
   }
 }

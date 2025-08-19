@@ -50,7 +50,7 @@ export class Ball {
         setTimeout(() => {
         this.vx = Math.cos(angle)*this.speed;
         this.vy = Math.sin(angle)*this.speed;
-        }, 2000);
+        }, 1500);
         this.stop()
     }
 
