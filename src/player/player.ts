@@ -1,6 +1,5 @@
-import { Paddle } from '../paddle/paddle.js';
-import { Ball } from '../ball/ball.js';
-import { PlayerInfo} from "../types/gameTypes.js";
+import { Paddle } from './paddle.js';
+import { Ball } from './ball.js';
 
 export class Player {
   public id : number;

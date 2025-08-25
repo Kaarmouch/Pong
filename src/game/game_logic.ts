@@ -1,11 +1,11 @@
 // src/game/game.ts
-import { Paddle } from '../paddle/paddle.js';
-import { Ball } from '../ball/ball.js';
-import { Player } from '../player/player.js';
-import { CPU } from '../player/CPU.js';
-import type { GameState, PlayerInfo } from '../types/gameTypes.js'
-import type { gameConfig } from '../types/gameTypes.js';
-import { Tracker } from '../tracker/tracker.js';
+import { Paddle } from './paddle.js';
+import { Ball } from './ball.js';
+import { Player } from './player.js';
+import { CPU } from './CPU.js';
+import type { GameState, PlayerInfo } from './types.js'
+import type { gameConfig } from './types.js';
+import { Tracker } from './tracker.js';
 // import { Strudel } from '@strudel/web';
 
 
@@ -25,7 +25,7 @@ export class GameLogic {
     this.canvasH = H;
     this.canvasW = W;  
     this.ball = new Ball(
-      W / 2,
+      (W / 2) - (W / 160),
       H / 2,
       W/ 80,
       W / 80,
@@ -119,6 +119,8 @@ export class GameLogic {
   
 
   update() {
+    if (!this.running) return;
+
     this.players.forEach((player, i) => {
     if (player && this.paddles[i]) {
       player.update(this.ball, this.canvasH);
@@ -134,7 +136,7 @@ export class GameLogic {
       this.tracker.resetExchange();
       if (this.isEnd() == true)
         return;
-      this.ball.x = this.canvasW / 2;
+      this.ball.x = (this.canvasW / 2) - (this.ball.width / 2);
       if ((this.scoreA + this.scoreB)%2 == 0)
         this.ball.y = this.canvasH - this.canvasH / 4;
       else
@@ -142,6 +144,16 @@ export class GameLogic {
         this.ball.spawn();
     }
   }
+
+getStatus() : boolean
+{
+    return (this.running);
+}
+
+changeStatus(x: boolean)
+{
+  this.running = x;
+}
 
   getGameState(): GameState {
   return {
@@ -165,8 +177,33 @@ export class GameLogic {
       B: this.scoreB
     },
     running: this.running,
-    traker: this.tracker.getStats(),
+    tracker: this.tracker.getStats(),
     }
   };
+
+  // ➕ À AJOUTER dans GameLogic
+public applyInput(playerIndex: number, dir: 'up'|'down'|'stop') {
+  const player = this.players[playerIndex];
+  if (!player || !('keys' in player)) return; // ignore CPU/null
+  const upKey = player.keys.up;
+  const downKey = player.keys.down;
+
+  if (dir === 'up') {
+    player.input[upKey] = true;
+    player.input[downKey] = false;
+  } else if (dir === 'down') {
+    player.input[downKey] = true;
+    player.input[upKey] = false;
+  } else {
+    // stop
+    player.input[upKey] = false;
+    player.input[downKey] = false;
+  }
 }
 
+// (optionnel mais pratique pour le serveur)
+public getSnapshot() {
+  return this.getGameState();
+}
+
+}

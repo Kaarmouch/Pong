@@ -1,4 +1,4 @@
-import { Ball } from "../ball/ball";
+import { Ball } from "./ball";
 
 
 export class Paddle {

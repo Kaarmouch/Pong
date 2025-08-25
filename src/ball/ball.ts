@@ -1,5 +1,5 @@
-import { Paddle } from "../paddle/paddle";
-import { Tracker } from "../tracker/tracker";
+import { Paddle } from "./paddle";
+import { Tracker } from "./tracker";
 
 export class Ball {
     public vx: number = 0;
